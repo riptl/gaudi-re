@@ -1,0 +1,53 @@
+--- a/compat/scripts/generate_flags.sh
++++ b/compat/scripts/generate_flags.sh
+@@ -84,7 +84,9 @@ function enable_config() {
+     echo "#define $name 1" >>"$OUTPUT_H"
+ }
+ 
+-grep -qs "u64_to_user_ptr" "$KERNEL_HEADERS_PATH/include/linux/kernel.h" &&
++grep -qs "u64_to_user_ptr" \
++    "$KERNEL_HEADERS_PATH/include/linux/kernel.h" \
++    "$KERNEL_HEADERS_PATH/include/linux/util_macros.h" &&
+     enable_config _HAS_U64_TO_USERPTR
+ 
+ grep -qs "DIV_ROUND_UP_ULL" "$KERNEL_HEADERS_PATH/include/linux/kernel.h" "$KERNEL_HEADERS_PATH/include/linux/math.h" &&
+--- a/dkms.conf
++++ b/dkms.conf
+@@ -8,7 +8,8 @@ MAKE[0]="pushd ${dkms_tree}/${PACKAGE_NAME}/${PACKAGE_VERSION}/build \
+     &&   make -j $(nproc)                                            \
+             KVERSION=$kernelver                                      \
+             GIT_SHA=${KMD_LAST_GIT_SHA}                              \
++            KCFLAGS=-Wno-error=unused-but-set-variable               \
+             MAKE_IB=1                                                \
+     &&   popd"
+ BUILT_MODULE_NAME[0]="habanalabs_en"
+ BUILT_MODULE_LOCATION[0]="drivers/net/ethernet/intel/hbl_en/"
+--- a/drivers/accel/habanalabs/cn/cn.c
++++ b/drivers/accel/habanalabs/cn/cn.c
+@@ -220,7 +220,7 @@ static int hl_cn_vm_dev_mmu_map(struct hbl_aux_dev *aux_dev, u64 vm_handle,
+ {
+ 	struct hl_cn *cn = container_of(aux_dev, struct hl_cn, cn_aux_dev);
+ 	struct hl_ctx *ctx;
+-	int rc;
++	int rc = -ENODEV;
+ 
+ 	ctx = hl_cn_get_ctx(cn, vm_handle, &rc);
+ 	if (!ctx)
+@@ -256,7 +256,7 @@ static int hl_cn_vm_reserve_dva_block(struct hbl_aux_dev *aux_dev, u64 vm_handle, u64 size,
+ 	struct hl_device *hdev = container_of(cn, struct hl_device, cn);
+ 	struct hl_ctx *ctx;
+ 	u64 addr;
+-	int rc;
++	int rc = -ENODEV;
+ 
+ 	ctx = hl_cn_get_ctx(cn, vm_handle, &rc);
+ 	if (!ctx)
+@@ -523,7 +523,7 @@ static int hl_cn_get_vm_info(struct hbl_aux_dev *aux_dev, u64 vm_handle,
+ {
+ 	struct hl_cn *cn = container_of(aux_dev, struct hl_cn, cn_aux_dev);
+ 	struct hl_ctx *ctx;
+-	int rc;
++	int rc = -ENODEV;
+ 
+ 	ctx = hl_cn_get_ctx(cn, vm_handle, &rc);
+ 	if (!ctx)

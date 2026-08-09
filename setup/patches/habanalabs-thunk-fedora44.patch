@@ -1,0 +1,10 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -50,6 +50,7 @@ endif()
+ set(CMAKE_C_FLAGS "-W -Werror -Wall -Wextra -Wno-unused-parameter")
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-field-initializers -Wno-type-limits")
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-sign-compare")
++set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error=maybe-uninitialized")
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-result")
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-strict-aliasing")
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2")

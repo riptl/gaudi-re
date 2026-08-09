@@ -1,0 +1,9 @@
+[habanalabs_synapseai_1.24.1]
+name=Intel Gaudi SynapseAI 1.24.1 (RHEL 9.8 compatibility repository)
+baseurl=https://vault.habana.ai/artifactory/rhel/9/9.8
+enabled=1
+gpgcheck=1
+# DNF 5 fails to retain the remotely supplied metadata key. The repomd.xml
+# signature was verified manually against the published Habana primary key.
+repo_gpgcheck=0
+gpgkey=https://vault.habana.ai/artifactory/api/v2/repositories/rhel/keyPairs/primary/public
